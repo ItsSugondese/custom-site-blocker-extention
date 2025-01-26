@@ -1,0 +1,41 @@
+body {
+    margin: 0;
+    width: 900px;
+    /* Set width */
+    height: 400px;
+    /* Set height */
+}
+
+.container {
+    display: flex;
+    /* Enable flexbox for the container */
+    justify-content: center;
+    /* Center the textarea horizontally */
+    align-items: center;
+    /* Center the textarea vertically */
+    width: 80%;
+    /* Set the width of the container */
+    height: 80%;
+    /* Set the height of the container */
+    background-color: white;
+    /* Optional background for the container */
+    border-radius: 10px;
+    /* Optional: rounded corners for the container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional: shadow */
+}
+
+textarea {
+    width: 600px;
+    /* Width of the textarea */
+    height: 150px;
+    /* Height of the textarea */
+    padding: 10px;
+    /* Optional padding inside the textarea */
+    font-size: 16px;
+    /* Optional font size */
+    border: 1px solid #ccc;
+    /* Optional border */
+    border-radius: 5px;
+    /* Optional rounded corners for the textarea */
+}

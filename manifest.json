@@ -1,0 +1,29 @@
+{
+  "name": "ClearingHouse Form Filler",
+  "version": "0.1.0",
+  "description": "To form fields",
+  "permissions": ["storage", "tabs", "activeTab"],
+  "host_permissions": ["https://*.roboform.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["contentScript.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [],
+      "matches": ["https://*.roboform.com/*"]
+    }
+  ],
+  "action": {
+    "default_icon": {},
+    "default_title": "ClearingHouse Form Filler",
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 3
+}
