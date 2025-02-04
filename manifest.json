@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "To form fields",
   "permissions": ["storage", "tabs", "activeTab"],
-  "host_permissions": ["https://*.roboform.com/*"],
+  "host_permissions": ["https://*.roboform.com/*", "https://*.instagram.com/*"],
   "background": {
     "service_worker": "background.js"
   },
@@ -17,7 +17,7 @@
   "web_accessible_resources": [
     {
       "resources": [],
-      "matches": ["https://*.roboform.com/*"]
+      "matches": ["https://*.roboform.com/*", "https://*.instagram.com/*"]
     }
   ],
   "action": {

@@ -45,3 +45,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   return true; // Keep the message channel open for async response
 });
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete" && tab.active) {
+    const currentTabUrl = tab.url;
+
+    if (
+      currentTabUrl.includes("reels") ||
+      currentTabUrl === "https://www.instagram.com/" ||
+      currentTabUrl === "https://www.instagram.com"
+    ) {
+      chrome.tabs.update(tabId, {
+        url: "https://www.instagram.com/direct/inbox/",
+      });
+    }
+  }
+});
