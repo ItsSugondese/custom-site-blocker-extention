@@ -65,6 +65,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       chrome.tabs.update(tabId, {
         url: "https://www.facebook.com/messages/new",
       });
+    } else if (currentTabUrl.startsWith("https://www.linkedin.com/")) {
+      chrome.tabs.remove(tabId);
     }
   }
 });
