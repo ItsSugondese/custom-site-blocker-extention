@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === "complete" && tab.active) {
+  if (tab.active) {
     const currentTabUrl = tab.url;
 
     if (
@@ -57,6 +57,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     ) {
       chrome.tabs.update(tabId, {
         url: "https://www.instagram.com/direct/inbox/",
+      });
+    } else if (
+      currentTabUrl === "https://www.facebook.com/" ||
+      currentTabUrl === "https://www.facebook.com"
+    ) {
+      chrome.tabs.update(tabId, {
+        url: "https://www.facebook.com/messages/new",
       });
     }
   }

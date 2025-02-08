@@ -1,5 +1,5 @@
 {
-  "name": "ClearingHouse Form Filler",
+  "name": "Website custome blocker",
   "version": "0.1.0",
   "description": "To form fields",
   "permissions": ["storage", "tabs", "activeTab"],
@@ -22,7 +22,7 @@
   ],
   "action": {
     "default_icon": {},
-    "default_title": "ClearingHouse Form Filler",
+    "default_title": "Website custome blocker",
     "default_popup": "popup.html"
   },
   "manifest_version": 3
