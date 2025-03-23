@@ -2,7 +2,7 @@
   "name": "Website custome blocker",
   "version": "0.1.0",
   "description": "To form fields",
-  "permissions": ["storage", "tabs", "activeTab"],
+  "permissions": ["storage", "tabs", "activeTab", "scripting"],
   "host_permissions": ["https://*.roboform.com/*", "https://*.instagram.com/*"],
   "background": {
     "service_worker": "background.js"
@@ -23,7 +23,7 @@
   "action": {
     "default_icon": {},
     "default_title": "Website custome blocker",
-    "default_popup": "popup.html"
+    "default_popup": "src/popup.html"
   },
   "manifest_version": 3
 }

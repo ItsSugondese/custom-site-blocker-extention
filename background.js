@@ -48,25 +48,126 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.active) {
-    const currentTabUrl = tab.url;
+    const siteName = extractSiteName(tab.url).toUpperCase();
+    chrome.storage.local.get(siteName, function (result) {
+      const getDataForSite = result[siteName] ?? {};
+      siteActionPerformCondition(siteName, tab, getDataForSite);
+    });
+  }
+});
 
-    if (
-      currentTabUrl.includes("reels") ||
-      currentTabUrl === "https://www.instagram.com/" ||
-      currentTabUrl === "https://www.instagram.com"
-    ) {
-      chrome.tabs.update(tabId, {
-        url: "https://www.instagram.com/direct/inbox/",
-      });
-    } else if (
-      currentTabUrl === "https://www.facebook.com/" ||
-      currentTabUrl === "https://www.facebook.com"
-    ) {
-      chrome.tabs.update(tabId, {
-        url: "https://www.facebook.com/messages/new",
-      });
-    } else if (currentTabUrl.startsWith("https://www.linkedin.com/")) {
-      chrome.tabs.remove(tabId);
+chrome.storage.onChanged.addListener(function (changes, namespace) {
+  for (let key in changes) {
+    const updatedData = changes[key].newValue;
+    // Get the active tab URL
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs.length > 0) {
+        siteActionPerformCondition(key, tabs[0], updatedData);
+      }
+    });
+  }
+});
+
+function siteActionPerformCondition(site, tab, data) {
+  const currentTabUrl = tab.url;
+  const tabId = tab.id;
+
+  isToggled = data[DataJsonKey.IS_ENABLED] ?? false;
+  shouldRedirect = data[DataJsonKey.SHOULD_REDIRECT] ?? false;
+  if (isToggled) {
+    if (site == "INSTAGRAM") {
+      if (
+        currentTabUrl.includes("reels") ||
+        currentTabUrl === "https://www.instagram.com/"
+      ) {
+        if (shouldRedirect) {
+          chrome.tabs.update(tabId, {
+            url:
+              data[DataJsonKey.REDIRECT_URL] ??
+              "https://www.instagram.com/direct/inbox/",
+          });
+        } else {
+          chrome.tabs.remove(tabId);
+        }
+      }
+    } else if (site == "FACEBOOK") {
+      if (currentTabUrl === "https://www.facebook.com/") {
+        if (shouldRedirect) {
+          chrome.tabs.update(tabId, {
+            url:
+              data[DataJsonKey.REDIRECT_URL] ??
+              "https://www.facebook.com/messages/new",
+          });
+        } else {
+          chrome.tabs.remove(tabId);
+        }
+      }
+    } else if (site == "LINKEDIN") {
+      if (currentTabUrl === "https://www.linkedin.com/") {
+        if (shouldRedirect) {
+          chrome.tabs.update(tabId, {
+            url:
+              data[DataJsonKey.REDIRECT_URL] ??
+              "https://www.linkedin.com/in/rohan-niraula-427769231/",
+          });
+        } else {
+          chrome.tabs.remove(tabId);
+        }
+      }
+    } else if (site == "REDDIT") {
+      if (
+        currentTabUrl === "https://www.reddit.com/" ||
+        currentTabUrl === "https://www.reddit.com/r/all/" ||
+        currentTabUrl === "https://www.reddit.com/explore/" ||
+        currentTabUrl === "https://www.reddit.com/" ||
+        currentTabUrl === "https://www.reddit.com/?feed=home"
+      ) {
+        if (shouldRedirect) {
+          chrome.tabs.update(tabId, {
+            url:
+              data[DataJsonKey.REDIRECT_URL] ??
+              "https://www.reddit.com/r/NepalSocial/",
+          });
+        } else {
+          chrome.tabs.remove(tabId);
+        }
+      }
     }
   }
+
+  if (site == "YOUTUBE") {
+    if (currentTabUrl === "https://www.youtube.com/") {
+      if (shouldRedirect) {
+        chrome.tabs.sendMessage(
+          tabId,
+          {
+            action: "DISABLE_SCROLL",
+            value: isToggled,
+          },
+          (response) => {
+            if (chrome.runtime.lastError) {
+              console.error(
+                "Content script not reachable:",
+                chrome.runtime.lastError.message
+              );
+            }
+          }
+        );
+      } else {
+        chrome.tabs.remove(tabId);
+      }
+    }
+  }
+}
+
+function extractSiteName(url) {
+  const hostname = new URL(url).hostname; // Get the hostname from the URL
+  const siteName = hostname.split(".")[1]; // Extract the site name (e.g., "instagram" from "www.instagram.com")
+  return siteName;
+}
+
+const DataJsonKey = Object.freeze({
+  IS_ENABLED: "IsEnabled",
+  SHOULD_REDIRECT: "ShouldRedirect",
+  REDIRECT_URL: "RedirectUrl",
 });
