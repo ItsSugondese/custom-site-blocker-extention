@@ -4,103 +4,20 @@
     <link href="styles/popup.css" rel="stylesheet" type="text/css" />
     <link href="styles/slider.css" rel="stylesheet" type="text/css" />
     <link href="styles/modal.css" rel="stylesheet" type="text/css" />
-
-    <script type="module" src="js/popup.js"></script>
   </head>
   <body>
     <div class="container">
-      <table>
+      <table id="platformTable">
         <thead>
           <tr>
             <th>Platform</th>
             <th>Enable</th>
+            <th>Disable Scroll</th>
             <th>Redirect</th>
             <th>Redirect Url</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Youtube</td>
-            <td class="enable-disable-checkbox">
-              <label class="toggle-switch">
-                <input type="checkbox" value="YOUTUBE" />
-                <span class="slider"></span>
-              </label>
-            </td>
-            <td class="enable-disable-redirect-checkbox">
-              <label class="toggle-switch">
-                <input type="checkbox" value="YOUTUBE" />
-                <span class="slider"></span>
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td>Reddit</td>
-            <td class="enable-disable-checkbox">
-              <label class="toggle-switch">
-                <input type="checkbox" value="REDDIT" />
-                <span class="slider"></span>
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td>Facebook</td>
-            <td class="enable-disable-checkbox">
-              <label class="toggle-switch">
-                <input type="checkbox" value="FACEBOOK" />
-                <span class="slider"></span>
-              </label>
-            </td>
-            <td class="enable-disable-redirect-checkbox">
-              <label class="toggle-switch">
-                <input type="checkbox" value="FACEBOOK" />
-                <span class="slider"></span>
-              </label>
-            </td>
-            <td>
-              <button
-                class="set-redirect"
-                data-modal-target="myModal"
-                value="FACEBOOK"
-              >
-                Set
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td>Insta</td>
-            <td class="enable-disable-checkbox">
-              <label class="toggle-switch">
-                <input type="checkbox" value="INSTAGRAM" />
-                <span class="slider"></span>
-              </label>
-            </td>
-            <td class="enable-disable-redirect-checkbox">
-              <label class="toggle-switch">
-                <input type="checkbox" value="INSTAGRAM" />
-                <span class="slider"></span>
-              </label>
-            </td>
-            <td>
-              <button
-                class="set-redirect"
-                data-modal-target="myModal"
-                value="INSTAGRAM"
-              >
-                Set
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td>LinkedIn</td>
-            <td class="enable-disable-checkbox">
-              <label class="toggle-switch">
-                <input type="checkbox" value="LINKEDIN" />
-                <span class="slider"></span>
-              </label>
-            </td>
-          </tr>
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
 
@@ -117,5 +34,7 @@
     </div>
 
     <script type="module" src="js/modal.js"></script>
+    <script type="module" src="js/data-loader.js"></script>
+    <script type="module" src="js/popup.js"></script>
   </body>
 </html>

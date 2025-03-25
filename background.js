@@ -1,49 +1,37 @@
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (tab.url && tab.url.includes("formsmarts")) {
-    console.log("Sending message to content script");
-
-    // Ensure the content script is injected before sending a message
-    chrome.tabs.sendMessage(
-      tabId,
-      {
-        type: "NEW",
-      },
-      (response) => {
-        if (chrome.runtime.lastError) {
-          console.error(
-            "Content script not reachable:",
-            chrome.runtime.lastError.message
-          );
-        }
-      }
-    );
-  }
-});
-
-// background.js
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "submitValue") {
-    const value = message.value;
-    console.log("Received value:", value);
-
-    // Send a message to the content script to set the value in the DOM
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]) {
-        console.log("Sending value to content script in tab", tabs[0].id);
-        chrome.tabs.sendMessage(tabs[0].id, {
-          action: "setValue",
-          value: value,
-        });
-      }
-    });
-
-    // Optionally, send a response back
-    sendResponse({
-      status: "success",
-      message: "Value received and processed",
-    });
-  }
-  return true; // Keep the message channel open for async response
+chrome.runtime.onInstalled.addListener(() => {
+  const platforms = {
+    YOUTUBE: {
+      [FilterJsonKey.NAME]: "YouTube",
+      [FilterJsonKey.INCLUDE]: ["https://www.youtube.com/"],
+    },
+    REDDIT: {
+      [FilterJsonKey.NAME]: "Reddit",
+      [FilterJsonKey.INCLUDE]: [
+        "https://www.reddit.com/",
+        "https://www.reddit.com/r/all/",
+        "https://www.reddit.com/explore/",
+        "https://www.reddit.com/",
+        "https://www.reddit.com/?feed=home",
+      ],
+    },
+    FACEBOOK: {
+      [FilterJsonKey.NAME]: "Facebook",
+      [FilterJsonKey.INCLUDE]: ["https://www.facebook.com/"],
+    },
+    INSTAGRAM: {
+      [FilterJsonKey.NAME]: "Instagram",
+      [FilterJsonKey.INCLUDE]: ["https://www.instagram.com/"],
+      [FilterJsonKey.CONTAINS]: ["https://www.instagram.com/reels/"],
+    },
+    LINKEDIN: {
+      [FilterJsonKey.NAME]: "LinkedIn",
+      [FilterJsonKey.INCLUDE]: ["https://www.linkedin.com/feed/"],
+    },
+  };
+  chrome.storage.local.set(
+    { [DataJsonKey.PLATFORM]: platforms },
+    function () {}
+  );
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -74,90 +62,59 @@ function siteActionPerformCondition(site, tab, data) {
 
   isToggled = data[DataJsonKey.IS_ENABLED] ?? false;
   shouldRedirect = data[DataJsonKey.SHOULD_REDIRECT] ?? false;
-  if (isToggled) {
-    if (site == "INSTAGRAM") {
-      if (
-        currentTabUrl.includes("reels") ||
-        currentTabUrl === "https://www.instagram.com/"
-      ) {
-        if (shouldRedirect) {
-          chrome.tabs.update(tabId, {
-            url:
-              data[DataJsonKey.REDIRECT_URL] ??
-              "https://www.instagram.com/direct/inbox/",
-          });
-        } else {
-          chrome.tabs.remove(tabId);
-        }
-      }
-    } else if (site == "FACEBOOK") {
-      if (currentTabUrl === "https://www.facebook.com/") {
-        if (shouldRedirect) {
-          chrome.tabs.update(tabId, {
-            url:
-              data[DataJsonKey.REDIRECT_URL] ??
-              "https://www.facebook.com/messages/new",
-          });
-        } else {
-          chrome.tabs.remove(tabId);
-        }
-      }
-    } else if (site == "LINKEDIN") {
-      if (currentTabUrl === "https://www.linkedin.com/") {
-        if (shouldRedirect) {
-          chrome.tabs.update(tabId, {
-            url:
-              data[DataJsonKey.REDIRECT_URL] ??
-              "https://www.linkedin.com/in/rohan-niraula-427769231/",
-          });
-        } else {
-          chrome.tabs.remove(tabId);
-        }
-      }
-    } else if (site == "REDDIT") {
-      if (
-        currentTabUrl === "https://www.reddit.com/" ||
-        currentTabUrl === "https://www.reddit.com/r/all/" ||
-        currentTabUrl === "https://www.reddit.com/explore/" ||
-        currentTabUrl === "https://www.reddit.com/" ||
-        currentTabUrl === "https://www.reddit.com/?feed=home"
-      ) {
-        if (shouldRedirect) {
-          chrome.tabs.update(tabId, {
-            url:
-              data[DataJsonKey.REDIRECT_URL] ??
-              "https://www.reddit.com/r/NepalSocial/",
-          });
-        } else {
-          chrome.tabs.remove(tabId);
-        }
-      }
-    }
-  }
+  shouldDisableScroll = data[DataJsonKey.SHOULD_DISABLE_SCROLL] ?? false;
 
-  if (site == "YOUTUBE") {
-    if (currentTabUrl === "https://www.youtube.com/") {
-      if (shouldRedirect) {
-        chrome.tabs.sendMessage(
-          tabId,
-          {
-            action: "DISABLE_SCROLL",
-            value: isToggled,
-          },
-          (response) => {
-            if (chrome.runtime.lastError) {
-              console.error(
-                "Content script not reachable:",
-                chrome.runtime.lastError.message
-              );
-            }
+  chrome.storage.local.get(DataJsonKey.PLATFORM, function (result) {
+    const includeUrl =
+      result[DataJsonKey.PLATFORM][site][FilterJsonKey.INCLUDE] ?? [];
+    const containsUrl =
+      result[DataJsonKey.PLATFORM][site][FilterJsonKey.CONTAINS] ?? [];
+
+    if (
+      containsUrl.some((prefix) => currentTabUrl.startsWith(prefix)) ||
+      includeUrl.includes(currentTabUrl)
+    ) {
+      sendMessage(
+        tabId,
+        "DISABLE_SCROLL",
+        isToggled ? shouldDisableScroll : false
+      );
+      if (isToggled) {
+        if (!shouldDisableScroll) {
+          if (shouldRedirect) {
+            //www.youtube.com/watch?v=dQw4w9WgXcQ
+            chrome.tabs.update(tabId, {
+              url:
+                data[DataJsonKey.REDIRECT_URL] ??
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            });
+          } else {
+            chrome.tabs.remove(tabId);
           }
+        }
+      }
+    } else {
+      sendMessage(tabId, "DISABLE_SCROLL", false);
+    }
+  });
+}
+
+function sendMessage(tabId, action, value) {
+  chrome.tabs.sendMessage(
+    tabId,
+    {
+      action: action,
+      value: value,
+    },
+    (response) => {
+      if (chrome.runtime.lastError) {
+        console.error(
+          "Content script not reachable:",
+          chrome.runtime.lastError.message
         );
-      } else {
-        chrome.tabs.remove(tabId);
       }
     }
-  }
+  );
 }
 
 function extractSiteName(url) {
@@ -170,4 +127,12 @@ const DataJsonKey = Object.freeze({
   IS_ENABLED: "IsEnabled",
   SHOULD_REDIRECT: "ShouldRedirect",
   REDIRECT_URL: "RedirectUrl",
+  SHOULD_DISABLE_SCROLL: "ShouldDisableScroll",
+  PLATFORM: "Platform",
+});
+
+const FilterJsonKey = Object.freeze({
+  NAME: "Name",
+  INCLUDE: "Include",
+  CONTAINS: "Contains",
 });

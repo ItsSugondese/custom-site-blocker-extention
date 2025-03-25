@@ -8,10 +8,12 @@ var submitBtn = document.getElementById("submitBtn");
 var inputField = document.getElementById("inputField");
 
 var key;
-// Open the modal when any button with data-modal-target is clicked
-document.querySelectorAll("[data-modal-target]").forEach((button) => {
-  button.onclick = function () {
-    key = button.value;
+
+// Event Delegation for buttons
+document.body.addEventListener("click", function (event) {
+  if (event.target.classList.contains("set-redirect")) {
+    key = event.target.value;
+
     chrome.storage.local.get(key, function (result) {
       let keyValueFromStorage = result[key] ?? undefined;
       const existingUrl =
@@ -19,10 +21,10 @@ document.querySelectorAll("[data-modal-target]").forEach((button) => {
           ? keyValueFromStorage[DataJsonKey.REDIRECT_URL] ?? ""
           : "";
 
-      document.getElementById("inputField").value = existingUrl;
+      inputField.value = existingUrl;
       modal.style.display = "block";
     });
-  };
+  }
 });
 
 // Close the modal when the close button is clicked

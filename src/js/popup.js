@@ -18,6 +18,13 @@ document.body.addEventListener("change", function (e) {
     const key = e.target.value;
     const checked = e.target.checked;
     saveState(key, DataJsonKey.SHOULD_REDIRECT, checked);
+  } else if (
+    e.target.type === "checkbox" &&
+    e.target.closest("td.enable-disable-scroll-checkbox")
+  ) {
+    const key = e.target.value;
+    const checked = e.target.checked;
+    saveState(key, DataJsonKey.SHOULD_DISABLE_SCROLL, checked);
   }
 });
 
@@ -41,6 +48,18 @@ document.addEventListener("DOMContentLoaded", function () {
         checkbox.checked =
           data !== undefined
             ? data[DataJsonKey.SHOULD_REDIRECT] ?? false
+            : false;
+      });
+
+    document
+      .querySelectorAll(
+        '.enable-disable-scroll-checkbox input[type="checkbox"]'
+      )
+      .forEach((checkbox) => {
+        var data = result[checkbox.value];
+        checkbox.checked =
+          data !== undefined
+            ? data[DataJsonKey.SHOULD_DISABLE_SCROLL] ?? false
             : false;
       });
   });

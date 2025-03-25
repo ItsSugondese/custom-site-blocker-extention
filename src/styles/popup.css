@@ -6,7 +6,7 @@
 
 
 .container{
-    width: 300px;
+    width: 400px;
     height: 300px;
     border: 1px solid black;
     padding: 10px;
@@ -20,4 +20,10 @@
 
 .set-redirect {
     width: 100%;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 8px;
+    /* Adjust space between cells */
 }
