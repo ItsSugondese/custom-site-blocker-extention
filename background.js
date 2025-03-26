@@ -35,7 +35,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (tab.active) {
+  if (tab.active && tab.url.startsWith("http")) {
     const siteName = extractSiteName(tab.url).toUpperCase();
     chrome.storage.local.get(siteName, function (result) {
       const getDataForSite = result[siteName] ?? {};
@@ -107,12 +107,12 @@ function sendMessage(tabId, action, value) {
       value: value,
     },
     (response) => {
-      if (chrome.runtime.lastError) {
-        console.error(
-          "Content script not reachable:",
-          chrome.runtime.lastError.message
-        );
-      }
+      // if (chrome.runtime.lastError) {
+      //   console.error(
+      //     "Content script not reachable:",
+      //     chrome.runtime.lastError.message
+      //   );
+      // }
     }
   );
 }

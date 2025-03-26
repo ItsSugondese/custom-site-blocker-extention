@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "description": "To form fields",
   "permissions": ["storage", "tabs", "activeTab", "scripting"],
-  "host_permissions": ["https://*.roboform.com/*", "https://*.instagram.com/*"],
+  "host_permissions": ["*://*/*"],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
+      "matches": ["*://*/*"],
       "js": ["contentScript.js"],
       "run_at": "document_end"
     }
@@ -17,7 +17,7 @@
   "web_accessible_resources": [
     {
       "resources": [],
-      "matches": ["https://*.roboform.com/*", "https://*.instagram.com/*"]
+      "matches": ["*://*/*"]
     }
   ],
   "action": {

@@ -29,38 +29,41 @@ document.body.addEventListener("change", function (e) {
 });
 
 // Load and apply saved states on popup open
-document.addEventListener("DOMContentLoaded", function () {
+$(function () {
   chrome.storage.local.get(null, function (result) {
-    document
-      .querySelectorAll('.enable-disable-checkbox input[type="checkbox"]')
-      .forEach((checkbox) => {
-        var data = result[checkbox.value];
-        checkbox.checked =
-          data !== undefined ? data[DataJsonKey.IS_ENABLED] ?? false : false;
-      });
+    $('.enable-disable-checkbox input[type="checkbox"]').each(function () {
+      var checkbox = $(this);
+      var data = result[checkbox.val()];
+      checkbox.prop(
+        "checked",
+        data !== undefined ? data[DataJsonKey.IS_ENABLED] ?? false : false
+      );
+    });
 
-    document
-      .querySelectorAll(
-        '.enable-disable-redirect-checkbox input[type="checkbox"]'
-      )
-      .forEach((checkbox) => {
-        var data = result[checkbox.value];
-        checkbox.checked =
+    $('.enable-disable-redirect-checkbox input[type="checkbox"]').each(
+      function () {
+        var checkbox = $(this);
+        var data = result[checkbox.val()];
+        checkbox.prop(
+          "checked",
           data !== undefined
             ? data[DataJsonKey.SHOULD_REDIRECT] ?? false
-            : false;
-      });
+            : false
+        );
+      }
+    );
 
-    document
-      .querySelectorAll(
-        '.enable-disable-scroll-checkbox input[type="checkbox"]'
-      )
-      .forEach((checkbox) => {
-        var data = result[checkbox.value];
-        checkbox.checked =
+    $('.enable-disable-scroll-checkbox input[type="checkbox"]').each(
+      function () {
+        var checkbox = $(this);
+        var data = result[checkbox.val()];
+        checkbox.prop(
+          "checked",
           data !== undefined
             ? data[DataJsonKey.SHOULD_DISABLE_SCROLL] ?? false
-            : false;
-      });
+            : false
+        );
+      }
+    );
   });
 });

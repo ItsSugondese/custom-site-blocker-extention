@@ -1,12 +1,9 @@
 import { DataJsonKey, FilterJsonKey } from "./enums/key-enums.js";
 
-document.addEventListener("DOMContentLoaded", function () {
+$(function () {
   let key = DataJsonKey.PLATFORM;
   chrome.storage.local.get(key, function (result) {
-    console.log();
     const platforms = Object.keys(result[key]).map((subKey) => {
-      console.log(subKey);
-      console.log(result[key][subKey]);
       return result[key][subKey][FilterJsonKey.NAME];
     });
 
@@ -41,7 +38,9 @@ document.addEventListener("DOMContentLoaded", function () {
     <td>
       <button
         class="set-redirect"
-        data-modal-target="myModal"
+        data-bs-toggle="modal" 
+        data-bs-target="#setUrlModal"
+        
         value="${platform.toUpperCase()}"
       >
         Set
@@ -53,3 +52,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
+//data-modal-target="myModal"
