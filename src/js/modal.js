@@ -29,6 +29,16 @@ $(function () {
 
       $("#containsUrlField").val(constainsUrlString);
     });
+
+    chrome.storage.local.get(key, function (result) {
+      let keyValueFromStorage = result[key] ?? undefined;
+
+      const includedUrlString =
+        keyValueFromStorage !== undefined
+          ? keyValueFromStorage[DataJsonKey.REDIRECT_URL] ?? ""
+          : "";
+      $("#redirectUrlField").val(includedUrlString);
+    });
   });
   $("#submitBtn").on("click", async function () {
     $("#submitBtn").prop("disabled", true);
@@ -48,6 +58,7 @@ $(function () {
           .filter((item) => item)
       : [];
 
+    saveState(key, DataJsonKey.REDIRECT_URL, $("#redirectUrlField").val());
     await saveStateInPlatformObject(
       key,
       FilterJsonKey.INCLUDE,
@@ -59,18 +70,7 @@ $(function () {
       containsUrlListFromField
     );
 
-    $("<button>", {
-      type: "button",
-      class: "btn btn-secondary",
-      "data-bs-dismiss": "modal",
-      text: "Close",
-      css: {
-        display: "none", // Ensure the button is not visible
-      },
-    })
-      .appendTo("#setUrlModal") // Append the button to the modal
-      .click(); // Trigger the click event immediately
-
+    $("#closeBtn").trigger("click");
     $("#submitBtn").prop("disabled", false);
   });
 });

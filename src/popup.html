@@ -21,7 +21,7 @@
             <th>Enable</th>
             <th>Disable Scroll</th>
             <th>Redirect</th>
-            <th>Redirect Url</th>
+            <th>Set Url</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -71,7 +71,7 @@
                 <textarea
                   id="includeUrlField"
                   class="form-control"
-                  rows="10"
+                  rows="4"
                   placeholder="Type here..."
                 ></textarea>
               </div>
@@ -92,14 +92,32 @@
                 <textarea
                   id="containsUrlField"
                   class="form-control"
-                  rows="10"
+                  rows="4"
                   placeholder="Type here..."
                 ></textarea>
               </div>
             </div>
+            <div
+              id="redirect-url-field-div"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+              "
+            >
+              <strong> Redirect: </strong>
+              <input
+                type="text"
+                id="redirectUrlField"
+                class="form-control"
+                placeholder="Type here..."
+              />
+            </div>
           </div>
           <div class="modal-footer">
             <button
+              id="closeBtn"
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
