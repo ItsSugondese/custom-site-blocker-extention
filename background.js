@@ -77,7 +77,8 @@ function siteActionPerformCondition(site, tab, data) {
       sendMessage(
         tabId,
         "DISABLE_SCROLL",
-        isToggled ? shouldDisableScroll : false
+        isToggled ? shouldDisableScroll : false,
+        site
       );
       if (isToggled) {
         if (!shouldDisableScroll) {
@@ -94,17 +95,18 @@ function siteActionPerformCondition(site, tab, data) {
         }
       }
     } else {
-      sendMessage(tabId, "DISABLE_SCROLL", false);
+      sendMessage(tabId, "DISABLE_SCROLL", false, site);
     }
   });
 }
 
-function sendMessage(tabId, action, value) {
+function sendMessage(tabId, action, value, site) {
   chrome.tabs.sendMessage(
     tabId,
     {
       action: action,
       value: value,
+      site: site,
     },
     (response) => {
       // if (chrome.runtime.lastError) {
