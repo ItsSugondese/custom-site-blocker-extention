@@ -70,7 +70,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     });
   } else if (message.action === "closeAllTab") {
-    closeAllTabsExceptAudio();
+    closeAllTabsExceptAudio(message.value);
   }
 
   if (message.action === "getMedia") {
@@ -156,24 +156,26 @@ function sendMessage(tabId, action, value, site) {
   );
 }
 
-function closeAllTabsExceptAudio() {
+function closeAllTabsExceptAudio(site) {
   chrome.tabs.query({}, function (tabs) {
     tabs.forEach((tab) => {
       // Check if the tab has audio playing
-      chrome.scripting.executeScript(
-        {
-          target: { tabId: tab.id },
-          func: checkAudioPlaying,
-        },
-        (result) => {
-          if (result && result[0].result) {
-            console.log("Audio is playing on tab, keeping open: ", tab.url);
-          } else {
-            console.log("No audio playing, closing tab: ", tab.url);
-            chrome.tabs.remove(tab.id); // Close the tab if no audio is playing
+      if (
+        site === undefined ||
+        tab.url.toLowerCase().includes(site.toLowerCase())
+      ) {
+        chrome.scripting.executeScript(
+          {
+            target: { tabId: tab.id },
+            func: site === undefined ? checkAudioPlaying : null,
+          },
+          (result) => {
+            if (!(result && result[0].result)) {
+              chrome.tabs.remove(tab.id); // Close the tab if no audio is playing
+            }
           }
-        }
-      );
+        );
+      }
     });
   });
 }

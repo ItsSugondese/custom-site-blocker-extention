@@ -46,9 +46,25 @@ $(function () {
         Set
       </button>
     </td>
+    <td>
+      <button
+        class="close-related-platform-tabs"
+        value="${platform.toUpperCase()}"
+      >
+        Close
+      </button>
+    </td>
   `;
 
       tbody.appendChild(tr);
+    });
+
+    // Select all the buttons with the class 'close-related-platform-tabs'
+    $(".close-related-platform-tabs").on("click", function () {
+      chrome.runtime.sendMessage({
+        action: "closeAllTab",
+        value: this.value,
+      });
     });
   });
 });

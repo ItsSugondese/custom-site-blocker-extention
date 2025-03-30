@@ -13,11 +13,11 @@
       rel="stylesheet"
       href="thrid-party/bootstrap-5.3.3-dist/css/bootstrap.min.css"
     />
-    <link
+    <!-- <link
       href="styles/tailwind/tailwind.css"
       rel="stylesheet"
       type="text/css"
-    />
+    /> -->
 
     <script src="thrid-party/jquery-3.7.1/jquery-3.7.1.min.js"></script>
   </head>
@@ -25,14 +25,11 @@
     <h3 id="date-setter" style="text-align: center"></h3>
 
     <div class="quick-container">
-      <i
-        id="pauseButton"
-        class="fas fa-pause hover:cursor-pointer hover:text-grey-500"
-      >
+      <i id="pauseButton" class="fas fa-pause" style="cursor: pointer">
         <span class=""> Pause All </span>
       </i>
 
-      <i class="fas fa-times hover:cursor-pointer" id="closeAllTabButton">
+      <i class="fas fa-times" style="cursor: pointer" id="closeAllTabButton">
         <span class=""> Close All </span>
       </i>
     </div>
@@ -46,6 +43,7 @@
             <th>Disable Scroll</th>
             <th>Redirect</th>
             <th>Set Url</th>
+            <th>Close Tabs</th>
           </tr>
         </thead>
         <tbody></tbody>
