@@ -12,6 +12,13 @@ body {
     padding: 10px;
 }
 
+.quick-container{
+    display: flex;
+        justify-content: space-evenly;
+    width: 100%;
+    align-content: center;
+}
+
 .toggle-container {
     display: flex;
     align-items: center;

@@ -56,32 +56,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         data: currentMedia,
       });
     }
-  }
-
-  if (message.action === "togglePause") {
-    isPaused = !isPaused; // Toggle the pause state
-
-    targetTab = parseInt(message.tabId, 10);
+  } else if (message.action === "togglePause") {
     chrome.tabs.query({}, (tabs) => {
       tabs.forEach((tab) => {
         chrome.tabs.sendMessage(
           tab.id,
           {
             action: "togglePause",
-            isPaused: tab.id === targetTab ? isPaused : !isPaused,
+            isPaused: true,
           },
           (response) => {}
         );
       });
     });
-    chrome.tabs.sendMessage(
-      parseInt(message.tabId, 10),
-      {
-        action: "togglePause",
-        isPaused: isPaused,
-      },
-      (response) => {}
-    );
+  } else if (message.action === "closeAllTab") {
+    closeAllTabsExceptAudio();
   }
 
   if (message.action === "getMedia") {
@@ -163,15 +152,36 @@ function sendMessage(tabId, action, value, site) {
       value: value,
       site: site,
     },
-    (response) => {
-      // if (chrome.runtime.lastError) {
-      //   console.error(
-      //     "Content script not reachable:",
-      //     chrome.runtime.lastError.message
-      //   );
-      // }
-    }
+    (response) => {}
   );
+}
+
+function closeAllTabsExceptAudio() {
+  chrome.tabs.query({}, function (tabs) {
+    tabs.forEach((tab) => {
+      // Check if the tab has audio playing
+      chrome.scripting.executeScript(
+        {
+          target: { tabId: tab.id },
+          func: checkAudioPlaying,
+        },
+        (result) => {
+          if (result && result[0].result) {
+            console.log("Audio is playing on tab, keeping open: ", tab.url);
+          } else {
+            console.log("No audio playing, closing tab: ", tab.url);
+            chrome.tabs.remove(tab.id); // Close the tab if no audio is playing
+          }
+        }
+      );
+    });
+  });
+}
+
+// Function to check if audio is playing in a tab
+function checkAudioPlaying() {
+  const media = document.querySelector("audio, video");
+  return media && !media.paused && media.readyState > 2; // Checking if audio/video is playing
 }
 
 function extractSiteName(url) {

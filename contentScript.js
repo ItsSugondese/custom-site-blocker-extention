@@ -1,4 +1,12 @@
 (() => {
+  document.addEventListener("keydown", function (event) {
+    if (event.ctrlKey && event.altKey && event.key.toUpperCase() === "P") {
+      console.log("clikcing working hai ta");
+      // Send a message to the background script
+      chrome.runtime.sendMessage({ action: "togglePause" });
+    }
+  });
+
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "DISABLE_SCROLL" && message.site !== "FACEBOOK") {
       if (!message.value) {
