@@ -2,11 +2,9 @@
 
 import { saveState } from "./common/storage.js";
 import { DataJsonKey } from "./enums/key-enums.js";
-import NepaliDate from "../../node_modules/nepali-date-converter/dist/nepali-date-converter.es5.js";
-
 // Load and apply saved states on popup open
 $(function () {
-  dateHeader();
+  // Initial load
 
   chrome.storage.local.get(null, function (result) {
     $('.enable-disable-checkbox input[type="checkbox"]').each(function () {
@@ -70,26 +68,3 @@ document.body.addEventListener("change", function (e) {
     saveState(key, DataJsonKey.SHOULD_DISABLE_SCROLL, checked);
   }
 });
-
-function dateHeader() {
-  const date = new Date();
-  const nepaliDate = new NepaliDate(date);
-
-  var formattedEngDate = date.toLocaleDateString("en-US", {
-    month: "long",
-    day: "2-digit",
-  });
-
-  var formattedNepaliDate = nepaliDate.format("MMMM DD");
-
-  $("#date-setter").text(
-    "Date : " + formattedNepaliDate + " / " + formattedEngDate
-  );
-  $("#date-setter").css({
-    color: [0, 6].includes(nepaliDate.getDay()) ? "red" : "black",
-    cursor: "pointer",
-  });
-  $("#date-setter").on("click", function () {
-    chrome.tabs.create({ url: "https://www.hamropatro.com/" });
-  });
-}

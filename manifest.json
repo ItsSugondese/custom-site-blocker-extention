@@ -11,6 +11,7 @@
     {
       "matches": ["*://*/*"],
       "js": ["contentScript.js"],
+      "css": ["src/styles/tailwind/tailwind.css"],
       "run_at": "document_end"
     }
   ],

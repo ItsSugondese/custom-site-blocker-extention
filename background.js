@@ -44,6 +44,61 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
+let currentMedia = {};
+let isPaused = false; // New variable to track pause state
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "updateMedia") {
+    if (!isPaused) {
+      currentMedia = message.data;
+      chrome.runtime.sendMessage({
+        action: "mediaUpdated",
+        data: currentMedia,
+      });
+    }
+  }
+
+  if (message.action === "togglePause") {
+    isPaused = !isPaused; // Toggle the pause state
+
+    targetTab = parseInt(message.tabId, 10);
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(
+          tab.id,
+          {
+            action: "togglePause",
+            isPaused: tab.id === targetTab ? isPaused : !isPaused,
+          },
+          (response) => {}
+        );
+      });
+    });
+    chrome.tabs.sendMessage(
+      parseInt(message.tabId, 10),
+      {
+        action: "togglePause",
+        isPaused: isPaused,
+      },
+      (response) => {}
+    );
+  }
+
+  if (message.action === "getMedia") {
+    sendResponse(currentMedia);
+  }
+
+  if (message.action === "getTabId") {
+    // Query the active tab in the current window
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tabId = tabs[0]?.id; // Ensure tabs[0] exists
+      sendResponse({ tabId: tabId });
+    });
+  }
+
+  return true;
+});
+
 chrome.storage.onChanged.addListener(function (changes, namespace) {
   for (let key in changes) {
     const updatedData = changes[key].newValue;
