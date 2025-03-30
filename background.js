@@ -44,19 +44,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
-let currentMedia = {};
-let isPaused = false; // New variable to track pause state
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "updateMedia") {
-    if (!isPaused) {
-      currentMedia = message.data;
-      chrome.runtime.sendMessage({
-        action: "mediaUpdated",
-        data: currentMedia,
-      });
-    }
-  } else if (message.action === "togglePause") {
+  if (message.action === "togglePause") {
     chrome.tabs.query({}, (tabs) => {
       tabs.forEach((tab) => {
         chrome.tabs.sendMessage(
@@ -72,20 +61,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   } else if (message.action === "closeAllTab") {
     closeAllTabsExceptAudio(message.value);
   }
-
-  if (message.action === "getMedia") {
-    sendResponse(currentMedia);
-  }
-
-  if (message.action === "getTabId") {
-    // Query the active tab in the current window
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tabId = tabs[0]?.id; // Ensure tabs[0] exists
-      sendResponse({ tabId: tabId });
-    });
-  }
-
-  return true;
 });
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
