@@ -1,0 +1,96 @@
+<div
+  class="modal fade"
+  id="setUrlModal"
+  tabindex="-1"
+  aria-labelledby="setUrlModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="setUrlModalLabel">Modal Title</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <label for="inputField">Enter Url to block:</label>
+        <br />
+        <div id="include-url-div">
+          <div
+            type="button"
+            id="toggle-url-btn"
+            data-bs-toggle="collapse"
+            data-bs-target="#include-url-area-div"
+            aria-expanded="false"
+            aria-controls="include-url-area-div"
+          >
+            <strong>Include Url <i id="icon" class="fas fa-copy"></i></strong>
+          </div>
+
+          <!-- Collapsible Textarea -->
+          <div id="include-url-area-div" class="collapse">
+            <textarea
+              id="includeUrlField"
+              class="form-control"
+              rows="4"
+              placeholder="Type here..."
+            ></textarea>
+          </div>
+        </div>
+        <div id="contains-url-div">
+          <div
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#contains-url-area-div"
+            aria-expanded="false"
+            aria-controls="contains-url-area-div"
+          >
+            <strong>Contains Url</strong>
+          </div>
+
+          <!-- Collapsible Textarea -->
+          <div id="contains-url-area-div" class="collapse">
+            <textarea
+              id="containsUrlField"
+              class="form-control"
+              rows="4"
+              placeholder="Type here..."
+            ></textarea>
+          </div>
+        </div>
+        <div
+          id="redirect-url-field-div"
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+          "
+        >
+          <strong> Redirect: </strong>
+          <input
+            type="text"
+            id="redirectUrlField"
+            class="form-control"
+            placeholder="Type here..."
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          id="closeBtn"
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+        <button id="submitBtn" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

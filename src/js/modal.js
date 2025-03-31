@@ -1,14 +1,12 @@
 import { saveState, saveStateInPlatformObject } from "./common/storage.js";
 import { DataJsonKey, FilterJsonKey } from "./enums/key-enums.js";
 
-// Get modal elements
-const submitBtn = document.getElementById("submitBtn");
-var key;
-
-$(function () {
+export function modalWhenPopUp() {
   $("#setUrlModal").on("show.bs.modal", function (event) {
     const button = event.relatedTarget; // Button that triggered the modal
-    key = button.value;
+    const key = button.value;
+
+    $("#submitBtn").val(key);
 
     chrome.storage.local.get(DataJsonKey.PLATFORM, function (result) {
       let keyValueFromStorage =
@@ -40,8 +38,12 @@ $(function () {
       $("#redirectUrlField").val(includedUrlString);
     });
   });
+}
+
+export function submitModalOperation() {
   $("#submitBtn").on("click", async function () {
-    $("#submitBtn").prop("disabled", true);
+    $(this).prop("disabled", true);
+    const key = this.value;
     const includeUrlString = $("#includeUrlField").val();
     var includeUrlListFromField = includeUrlString
       ? includeUrlString
@@ -71,6 +73,6 @@ $(function () {
     );
 
     $("#closeBtn").trigger("click");
-    $("#submitBtn").prop("disabled", false);
+    $(this).prop("disabled", false);
   });
-});
+}

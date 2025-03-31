@@ -1,4 +1,6 @@
 import { DataJsonKey, FilterJsonKey } from "./enums/key-enums.js";
+import { saveState, saveStateInPlatformObject } from "./common/storage.js";
+import { modalWhenPopUp, submitModalOperation } from "./modal.js";
 
 $(function () {
   let key = DataJsonKey.PLATFORM;
@@ -60,13 +62,35 @@ $(function () {
     });
 
     // Select all the buttons with the class 'close-related-platform-tabs'
-    $(".close-related-platform-tabs").on("click", function () {
-      chrome.runtime.sendMessage({
-        action: "closeAllTab",
-        value: this.value,
-      });
-    });
+    whenPressedCloseSiteTabButton();
+
+    loadModalHtmlFile();
   });
 });
 
-//data-modal-target="myModal"
+function whenPressedCloseSiteTabButton() {
+  $(".close-related-platform-tabs").on("click", function () {
+    chrome.runtime.sendMessage({
+      action: "closeAllTab",
+      value: this.value,
+    });
+  });
+}
+
+function loadModalHtmlFile() {
+  const modalUrl = chrome.runtime.getURL("src/modal.html"); // Corrected file path
+
+  $.get(modalUrl, function (data) {
+    // Check if the modal already exists and clear it if it does.
+    if ($("#setUrlModal").length) {
+      $("#setUrlModal").remove();
+    }
+
+    // Append the modal to the body
+    $("body").append(data);
+
+    modalWhenPopUp();
+
+    submitModalOperation();
+  });
+}
