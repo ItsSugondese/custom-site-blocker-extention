@@ -31,11 +31,11 @@ export function modalWhenPopUp() {
     chrome.storage.local.get(key, function (result) {
       let keyValueFromStorage = result[key] ?? undefined;
 
-      const includedUrlString =
+      let redirectUrlString =
         keyValueFromStorage !== undefined
           ? keyValueFromStorage[DataJsonKey.REDIRECT_URL] ?? ""
           : "";
-      $("#redirectUrlField").val(includedUrlString);
+      $("#redirectField").val(redirectUrlString);
     });
   });
 }
@@ -60,7 +60,7 @@ export function submitModalOperation() {
           .filter((item) => item)
       : [];
 
-    saveState(key, DataJsonKey.REDIRECT_URL, $("#redirectUrlField").val());
+    saveState(key, DataJsonKey.REDIRECT_URL, $("#redirectField").val());
     await saveStateInPlatformObject(
       key,
       FilterJsonKey.INCLUDE,
