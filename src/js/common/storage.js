@@ -25,7 +25,6 @@ export function saveStateInPlatformObject(siteUrlAsKey, dataKey, valueToSet) {
       data[siteUrlAsKey] = siteValueToModify;
 
       chrome.storage.local.set({ [key]: data }, function () {
-        console.log("State saved successfully!");
         resolve(); // Resolve the promise when saving is done
       });
     });
@@ -41,9 +40,30 @@ export function savePlatformObject(subKey, valueToSet) {
       data[subKey] = valueToSet;
 
       chrome.storage.local.set({ [key]: data }, function () {
-        console.log("State saved successfully!");
         resolve(); // Resolve the promise when saving is done
       });
+    });
+  });
+}
+export function removeFromPlatformObject(subKey) {
+  const key = DataJsonKey.PLATFORM;
+
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(key, function (result) {
+      const data = { ...result[key] };
+      delete data[subKey];
+
+      chrome.storage.local.set({ [key]: data }, function () {
+        resolve(); // Resolve the promise when saving is done
+      });
+    });
+  });
+}
+
+export function removeObject(key) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.remove(key, function () {
+      resolve(); // Resolve the promise when removal is done
     });
   });
 }

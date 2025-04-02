@@ -1,3 +1,7 @@
+import {
+  removeFromPlatformObject,
+  removeObject,
+} from "../../common/storage.js";
 import { DataJsonKey, FilterJsonKey } from "../../enums/key-enums.js";
 import { modalWhenPopUp, submitModalOperation } from "./modal.js";
 
@@ -55,6 +59,16 @@ $(function () {
         Close
       </button>
     </td>
+    <td>
+      <button
+        class="delete-site"
+        data-bs-toggle="modal" 
+        data-bs-target="#areYouSureModal"
+        value="${platform.toUpperCase()}"
+      >
+        Delete Site
+      </button>
+    </td>
   `;
 
       tbody.appendChild(tr);
@@ -64,6 +78,8 @@ $(function () {
     whenPressedCloseSiteTabButton();
 
     loadModalHtmlFile();
+
+    loadDeleteModal();
   });
 });
 
@@ -78,7 +94,6 @@ function whenPressedCloseSiteTabButton() {
 
 function loadModalHtmlFile() {
   const modalUrl = chrome.runtime.getURL("src/redirect-url-modal.html"); // Corrected file path
-
   $.get(modalUrl, function (data) {
     // Check if the modal already exists and clear it if it does.
     if ($("#setUrlModal").length) {
@@ -91,5 +106,32 @@ function loadModalHtmlFile() {
     modalWhenPopUp();
 
     submitModalOperation();
+  });
+}
+
+function loadDeleteModal() {
+  const modalUrl = chrome.runtime.getURL("src/are-you-sure-modal.html"); // Corrected file path
+
+  $.get(modalUrl, function (data) {
+    // Check if the modal already exists and clear it if it does.
+    if ($("#areYouSureModal").length) {
+      $("#areYouSureModal").remove();
+    }
+
+    // Append the modal to the body
+    $("body").append(data);
+
+    $("#areYouSureModal").on("show.bs.modal", function (event) {
+      const button = event.relatedTarget; // Button that triggered the modal
+      const key = button.value;
+
+      $("#yesBtn").val(key);
+    });
+
+    $("#yesBtn").on("click", async function () {
+      await removeFromPlatformObject(this.value);
+      await removeObject(this.value);
+      window.close();
+    });
   });
 }
