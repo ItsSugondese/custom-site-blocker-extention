@@ -48,12 +48,26 @@
         </thead>
         <tbody></tbody>
       </table>
+      <div class="d-flex justify-content-center align-items-center mt-2">
+        <button
+          data-bs-toggle="modal"
+          data-bs-target="#addSiteModal"
+          class="set-add"
+        >
+          Add New Site
+        </button>
+      </div>
     </div>
 
-    <script type="module" src="js/date.js"></script>
-    <script type="module" src="js/media-player.js"></script>
+    <script type="module" src="js/module/date-display/date.js"></script>
+    <script type="module" src="js/module/media/media.js"></script>
+    <script type="module" src="js/module/tabs-closer/tab-closer.js"></script>
+    <script type="module" src="js/module/add-site/site-add-modal.js"></script>
+    <script
+      type="module"
+      src="js/module/site-display-and-redirect/site-table-data-and-modal-loader.js"
+    ></script>
     <script src="thrid-party/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="js/site-table-data-and-modal-loader.js"></script>
     <script type="module" src="js/popup.js"></script>
   </body>
 </html>

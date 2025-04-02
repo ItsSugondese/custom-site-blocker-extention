@@ -1,5 +1,4 @@
-import { DataJsonKey, FilterJsonKey } from "./enums/key-enums.js";
-import { saveState, saveStateInPlatformObject } from "./common/storage.js";
+import { DataJsonKey, FilterJsonKey } from "../../enums/key-enums.js";
 import { modalWhenPopUp, submitModalOperation } from "./modal.js";
 
 $(function () {
@@ -78,7 +77,7 @@ function whenPressedCloseSiteTabButton() {
 }
 
 function loadModalHtmlFile() {
-  const modalUrl = chrome.runtime.getURL("src/modal.html"); // Corrected file path
+  const modalUrl = chrome.runtime.getURL("src/redirect-url-modal.html"); // Corrected file path
 
   $.get(modalUrl, function (data) {
     // Check if the modal already exists and clear it if it does.

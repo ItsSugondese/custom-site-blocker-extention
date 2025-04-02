@@ -31,3 +31,19 @@ export function saveStateInPlatformObject(siteUrlAsKey, dataKey, valueToSet) {
     });
   });
 }
+
+export function savePlatformObject(subKey, valueToSet) {
+  const key = DataJsonKey.PLATFORM;
+
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(key, function (result) {
+      const data = { ...result[key] };
+      data[subKey] = valueToSet;
+
+      chrome.storage.local.set({ [key]: data }, function () {
+        console.log("State saved successfully!");
+        resolve(); // Resolve the promise when saving is done
+      });
+    });
+  });
+}

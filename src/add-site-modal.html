@@ -1,0 +1,82 @@
+<div
+  class="modal fade"
+  id="addSiteModal"
+  tabindex="-1"
+  aria-labelledby="setUrlModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="setUrlModalLabel">Modal Title</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <label class="d-flex justify-content-center align-items-center"
+          >Enter Site details to block</label
+        >
+
+        <form id="siteAddForm">
+          <div class="form-group">
+            <label for="siteNameField">Site Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="siteNameField"
+              aria-describedby="emailHelp"
+              placeholder="Enter site name"
+            />
+            <small class="d-none text-danger" id="siteNameOutput"
+              >Please enter site name</small
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="redirectUrlField">Redirect Url</label>
+            <input
+              type="text"
+              class="form-control"
+              id="redirectUrlField"
+              aria-describedby="emailHelp"
+              placeholder="Enter redirect url"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="matchUrlTextArea">Match Url to block</label>
+            <textarea
+              class="form-control"
+              id="matchUrlTextArea"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="containsUrlTextArea">Contains in Url to block</label>
+            <textarea
+              class="form-control"
+              id="containsUrlTextArea"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button
+              id="addSitecloseBtn"
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

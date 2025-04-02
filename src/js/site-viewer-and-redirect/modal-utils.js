@@ -1,5 +1,5 @@
-import { saveState, saveStateInPlatformObject } from "./common/storage.js";
-import { DataJsonKey, FilterJsonKey } from "./enums/key-enums.js";
+import { saveState, saveStateInPlatformObject } from "../../common/storage.js";
+import { DataJsonKey, FilterJsonKey } from "../../enums/key-enums.js";
 
 export function modalWhenPopUp() {
   $("#setUrlModal").on("show.bs.modal", function (event) {

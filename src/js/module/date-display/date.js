@@ -1,4 +1,4 @@
-import NepaliDate from "../../node_modules/nepali-date-converter/dist/nepali-date-converter.es5.js";
+import NepaliDate from "../../../../node_modules/nepali-date-converter/dist/nepali-date-converter.es5.js";
 
 $(function () {
   const date = new Date();
