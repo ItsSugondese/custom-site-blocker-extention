@@ -115,8 +115,10 @@ function siteActionPerformCondition(site, tab, data) {
             //www.youtube.com/watch?v=dQw4w9WgXcQ
             chrome.tabs.update(tabId, {
               url:
-                data[DataJsonKey.REDIRECT_URL] ??
-                "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                data[DataJsonKey.REDIRECT_URL] === undefined ||
+                data[DataJsonKey.REDIRECT_URL] == ""
+                  ? "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  : data[DataJsonKey.REDIRECT_URL],
             });
           } else {
             chrome.tabs.remove(tabId);
