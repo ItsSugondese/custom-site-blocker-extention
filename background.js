@@ -1,4 +1,6 @@
 chrome.runtime.onInstalled.addListener(() => {
+  updateIconTabCounter();
+
   const platforms = {
     YOUTUBE: {
       [FilterJsonKey.NAME]: "YouTube",
@@ -33,6 +35,14 @@ chrome.runtime.onInstalled.addListener(() => {
     function () {}
   );
 });
+
+chrome.runtime.onStartup.addListener(updateIconTabCounter);
+
+// Listen for new tabs
+chrome.tabs.onCreated.addListener(updateIconTabCounter);
+
+// Listen for closed tabs
+chrome.tabs.onRemoved.addListener(updateIconTabCounter);
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.active && tab.url.startsWith("http")) {
@@ -165,6 +175,14 @@ function extractSiteName(url) {
   const hostname = new URL(url).hostname; // Get the hostname from the URL
   const siteName = hostname.split(".")[1]; // Extract the site name (e.g., "instagram" from "www.instagram.com")
   return siteName;
+}
+
+function updateIconTabCounter() {
+  chrome.tabs.query({}, (tabs) => {
+    let count = tabs.length; // Get the number of open tabs
+    chrome.action.setBadgeText({ text: count.toString() });
+    chrome.action.setBadgeBackgroundColor({ color: "#FFC0CB" });
+  });
 }
 
 const DataJsonKey = Object.freeze({
