@@ -47,9 +47,52 @@ chrome.tabs.onRemoved.addListener(updateIconTabCounter);
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.active && tab.url.startsWith("http")) {
     const siteName = extractSiteName(tab.url).toUpperCase();
-    chrome.storage.local.get(siteName, function (result) {
-      const getDataForSite = result[siteName] ?? {};
-      siteActionPerformCondition(siteName, tab, getDataForSite);
+    let platformKey = DataJsonKey.PLATFORM;
+    chrome.storage.local.get(platformKey, async function (result) {
+      const platforms = Object.keys(result[platformKey]).map((subKey) => {
+        return result[platformKey][subKey][FilterJsonKey.NAME].toUpperCase();
+      });
+
+      var uppercaseSiteName = siteName.toUpperCase();
+
+      if (platforms.includes(uppercaseSiteName)) {
+        chrome.storage.local.get(siteName, function (result) {
+          const getDataForSite = result[siteName] ?? {};
+          siteActionPerformCondition(siteName, tab, getDataForSite);
+        });
+      } else if (
+        tab.url === "https://emp3juice.la/" ||
+        tab.url.startsWith("https://en1.savefrom.net/")
+      ) {
+        chrome.storage.local.get(
+          DataJsonKey.DOWNLOAD_URL,
+          async function (result) {
+            const downloadUrlObject = result[DataJsonKey.DOWNLOAD_URL];
+
+            if (downloadUrlObject !== undefined) {
+              chrome.tabs.sendMessage(
+                tab.id,
+                {
+                  action: "download",
+                  downloadType:
+                    downloadUrlObject[DownloadUrlJsonKey.DOWNLOAD_TYPE],
+                  downloadUrl: downloadUrlObject[DownloadUrlJsonKey.URL],
+                },
+                (response) => {
+                  if (response.type === "download") {
+                    if (response.isCompleted) {
+                      chrome.storage.local.remove(
+                        DataJsonKey.DOWNLOAD_URL,
+                        function () {}
+                      );
+                    }
+                  }
+                }
+              );
+            }
+          }
+        );
+      }
     });
   }
 });
@@ -196,10 +239,16 @@ const DataJsonKey = Object.freeze({
   REDIRECT_URL: "RedirectUrl",
   SHOULD_DISABLE_SCROLL: "ShouldDisableScroll",
   PLATFORM: "Platform",
+  DOWNLOAD_URL: "DownloadURL",
 });
 
 const FilterJsonKey = Object.freeze({
   NAME: "Name",
   INCLUDE: "Include",
   CONTAINS: "Contains",
+});
+
+const DownloadUrlJsonKey = Object.freeze({
+  DOWNLOAD_TYPE: "DownloadType",
+  URL: "URL",
 });

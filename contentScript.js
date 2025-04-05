@@ -21,8 +21,39 @@
       findMediaElement(); // Ensure we have the latest media element
       const isPaused = message.isPaused;
       toggleMediaPlayback(isPaused); // Pause or play the media
+    } else if (message.action === "download") {
+      if (message.downloadType === "MUSIC") {
+        document.getElementById("query").value = message.downloadUrl;
+        document.querySelector('input[type="submit"][value="Search"]').click();
+
+        waitForElement("a.\\31")
+          .then((link) => {
+            link.click();
+            waitForElement("a.completed")
+              .then((completedLink) => {
+                completedLink.click();
+              })
+              .catch(console.error);
+          })
+          .catch(console.error);
+      } else {
+        waitForElement('a.download-icon[data-quality="720"][data-type="mp4"]')
+          .then((link) => {
+            link.click();
+            waitForElement("button.c-ui-download-button")
+              .then((button) => {
+                button.click();
+              })
+              .catch(console.error);
+          })
+          .catch(console.error);
+      }
     }
-    sendResponse({ status: "everything ok" });
+    sendResponse({
+      type: "download",
+      isCompleted: true,
+      status: "everything ok",
+    });
     return true;
   });
 
@@ -45,3 +76,22 @@
     }
   }
 })();
+
+function waitForElement(selector, timeout = 10000) {
+  return new Promise((resolve, reject) => {
+    const observer = new MutationObserver(() => {
+      const element = document.querySelector(selector);
+      if (element) {
+        observer.disconnect();
+        resolve(element);
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    setTimeout(() => {
+      observer.disconnect();
+      reject(new Error("Element not found within timeout."));
+    }, timeout);
+  });
+}

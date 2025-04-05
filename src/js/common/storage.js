@@ -2,12 +2,16 @@ import { DataJsonKey } from "../enums/key-enums.js";
 
 // Function to save state to chrome storage
 export function saveState(siteUrlAsKey, dataKey, valueToSet) {
-  chrome.storage.local.get(siteUrlAsKey, function (result) {
-    const data = result[siteUrlAsKey] ?? {};
-    valueToSet === undefined
-      ? delete data[dataKey]
-      : (data[dataKey] = valueToSet);
-    chrome.storage.local.set({ [siteUrlAsKey]: data }, function () {});
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(siteUrlAsKey, function (result) {
+      const data = result[siteUrlAsKey] ?? {};
+      valueToSet === undefined
+        ? delete data[dataKey]
+        : (data[dataKey] = valueToSet);
+      chrome.storage.local.set({ [siteUrlAsKey]: data }, function () {
+        resolve();
+      });
+    });
   });
 }
 

@@ -24,7 +24,7 @@
   <body>
     <h3 id="date-setter" style="text-align: center"></h3>
 
-    <div class="quick-container">
+    <div class="quick-container d-flex align-items-center">
       <i id="pauseButton" class="fas fa-pause" style="cursor: pointer">
         <span class=""> Pause All </span>
       </i>
@@ -32,6 +32,29 @@
       <i class="fas fa-times" style="cursor: pointer" id="closeAllTabButton">
         <span class=""> Close All </span>
       </i>
+
+        <div class="dropdown d-inline">
+  <button
+    class="btn btn-light dropdown-toggle d-flex align-items-center"
+    type="button"
+    id="downloadButton"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    <i class="fas fa-download me-2"></i>
+    <span id="buttonText">Download</span>
+  </button>
+  <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="downloadButton">
+    <li>
+      <a class="dropdown-item" href="#" data-option="Music">Music</a>
+    </li>
+    <li>
+      <a class="dropdown-item" href="#" data-option="Video">Video</a>
+    </li>
+  </ul>
+</div>
+
+      </div>
     </div>
 
     <div class="container">
@@ -63,6 +86,7 @@
     <script type="module" src="js/module/date-display/date.js"></script>
     <script type="module" src="js/module/media/media.js"></script>
     <script type="module" src="js/module/tabs-closer/tab-closer.js"></script>
+    <script type="module" src="js/module/download/download.js" defer></script>
     <script type="module" src="js/module/add-site/site-add-modal.js"></script>
     <script
       type="module"
