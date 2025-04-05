@@ -240,6 +240,7 @@ const DataJsonKey = Object.freeze({
   SHOULD_DISABLE_SCROLL: "ShouldDisableScroll",
   PLATFORM: "Platform",
   DOWNLOAD_URL: "DownloadURL",
+  NOTE_TAKEN: "NoteTaken",
 });
 
 const FilterJsonKey = Object.freeze({

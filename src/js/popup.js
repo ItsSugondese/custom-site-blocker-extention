@@ -2,10 +2,8 @@
 
 import { saveState } from "./common/storage.js";
 import { DataJsonKey } from "./enums/key-enums.js";
-// Load and apply saved states on popup open
-$(function () {
-  // Initial load
 
+$(function () {
   chrome.storage.local.get(null, function (result) {
     $('.enable-disable-checkbox input[type="checkbox"]').each(function () {
       var checkbox = $(this);

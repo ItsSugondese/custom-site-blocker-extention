@@ -6,6 +6,7 @@ export const DataJsonKey = Object.freeze({
   PLATFORM: "Platform",
   DOWNLOAD_URL: "DownloadURL",
   SELECTED_COLOR: "SelectedColor",
+  NOTE_TAKEN: "NoteTaken",
 });
 
 export const FilterJsonKey = Object.freeze({

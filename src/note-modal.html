@@ -1,14 +1,28 @@
+<style>
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    height: calc(
+      100vh - 100px
+    ); /* Adjust the height based on the modal's header and footer height */
+  }
+
+  textarea {
+    flex-grow: 1; /* Allow the textarea to expand and fill the available space */
+  }
+</style>
+
 <div
   class="modal fade"
-  id="areYouSureModal"
+  id="noteModal"
   tabindex="-1"
-  aria-labelledby="areYouSureLabel"
+  aria-labelledby="noteLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5">Modal Title</h1>
+        <h1 class="modal-title fs-5" id="setUrlModalLabel">Note</h1>
         <button
           type="button"
           class="btn-close"
@@ -17,20 +31,17 @@
         ></button>
       </div>
       <div class="modal-body">
-        <label class="d-flex justify-content-center align-items-center"
-          >Are you sure you want to delete this site?</label
-        >
+        <textarea class="p-1" id="noteArea"></textarea>
 
         <div class="modal-footer">
           <button
-            id="noBtn"
+            id="closeBtn"
             type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
           >
-            No
+            Close
           </button>
-          <button type="submit" id="yesBtn" class="btn btn-primary">Yes</button>
         </div>
       </div>
     </div>
