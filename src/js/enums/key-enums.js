@@ -5,6 +5,7 @@ export const DataJsonKey = Object.freeze({
   SHOULD_DISABLE_SCROLL: "ShouldDisableScroll",
   PLATFORM: "Platform",
   DOWNLOAD_URL: "DownloadURL",
+  SELECTED_COLOR: "SelectedColor",
 });
 
 export const FilterJsonKey = Object.freeze({

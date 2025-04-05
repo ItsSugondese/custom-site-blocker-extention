@@ -15,6 +15,17 @@ export function saveState(siteUrlAsKey, dataKey, valueToSet) {
   });
 }
 
+// Function to save state to chrome storage
+export function saveSingleValueState(key, valueToSet) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(key, function (result) {
+      chrome.storage.local.set({ [key]: valueToSet }, function () {
+        resolve();
+      });
+    });
+  });
+}
+
 export function saveStateInPlatformObject(siteUrlAsKey, dataKey, valueToSet) {
   const key = DataJsonKey.PLATFORM;
 
