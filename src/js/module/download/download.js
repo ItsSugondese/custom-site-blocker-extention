@@ -37,9 +37,8 @@ $(function () {
           if (downloadType === "MUSIC") {
             chrome.tabs.create({ url: "https://emp3juice.la/" });
           } else {
-            let updatedUrl = url.replace(/(https?:\/\/www\.)/, "$1ss"); // Append 'ss' after 'www.'
-
-            chrome.tabs.create({ url: updatedUrl });
+            // let updatedUrl = url.replace(/(https?:\/\/www\.)/, "$1ss"); // Append 'ss' after 'www.'
+            chrome.tabs.create({ url: "https://en1.savefrom.net/" });
           }
         }
       }

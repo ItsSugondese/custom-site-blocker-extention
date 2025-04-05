@@ -37,6 +37,9 @@
           })
           .catch(console.error);
       } else {
+        document.getElementById("sf_url").value = message.downloadUrl;
+        document.getElementById("sf_submit").click();
+
         waitForElement('a.download-icon[data-quality="720"][data-type="mp4"]')
           .then((link) => {
             link.click();
@@ -77,7 +80,7 @@
   }
 })();
 
-function waitForElement(selector, timeout = 10000) {
+function waitForElement(selector, timeout = 20000) {
   return new Promise((resolve, reject) => {
     const observer = new MutationObserver(() => {
       const element = document.querySelector(selector);
