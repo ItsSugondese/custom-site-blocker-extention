@@ -36,6 +36,31 @@ chrome.runtime.onInstalled.addListener(() => {
   );
 });
 
+let popupPort;
+
+chrome.runtime.onConnect.addListener((port) => {
+  if (port.name === "popup") {
+    popupPort = port;
+
+    // Listen for messages from the popup
+    popupPort.onMessage.addListener((msg) => {
+      if (msg === "popupClosed") {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if (tabs.length > 0) {
+            const tab = tabs[0]; // Get the first active tab
+            chrome.tabs.sendMessage(tab.id, {
+              action: "disturbToggle",
+              value: false,
+            });
+          } else {
+            console.error("No active tab found!");
+          }
+        });
+      }
+    });
+  }
+});
+
 chrome.runtime.onStartup.addListener(updateIconTabCounter);
 
 // Listen for new tabs
@@ -113,6 +138,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
   } else if (message.action === "closeAllTab") {
     closeAllTabsExceptAudio(message.value);
+  } else if (message.action === "disturbToggle") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length > 0) {
+        const tab = tabs[0]; // Get the first active tab
+        chrome.tabs.sendMessage(tab.id, {
+          action: "disturbToggle",
+          value: message.value,
+        });
+      } else {
+        console.error("No active tab found!");
+      }
+    });
   }
 });
 

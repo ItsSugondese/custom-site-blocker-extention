@@ -1,5 +1,5 @@
 <style>
-  .modal-body {
+  .note-modal-body {
     display: flex;
     flex-direction: column;
     height: calc(
@@ -7,8 +7,9 @@
     ); /* Adjust the height based on the modal's header and footer height */
   }
 
-  textarea {
+  #noteArea {
     flex-grow: 1; /* Allow the textarea to expand and fill the available space */
+    padding: 8px !important;
   }
 </style>
 
@@ -30,7 +31,7 @@
           aria-label="Close"
         ></button>
       </div>
-      <div class="modal-body">
+      <div class="note-modal-body">
         <textarea class="p-1" id="noteArea"></textarea>
 
         <div class="modal-footer">

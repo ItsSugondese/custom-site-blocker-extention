@@ -66,3 +66,7 @@ document.body.addEventListener("change", function (e) {
     saveState(key, DataJsonKey.SHOULD_DISABLE_SCROLL, checked);
   }
 });
+
+window.addEventListener("beforeunload", () => {
+  chrome.runtime.connect({ name: "popup" }).postMessage("popupClosed");
+});
