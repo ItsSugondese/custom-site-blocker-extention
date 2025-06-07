@@ -1,0 +1,55 @@
+<div
+  class="modal fade"
+  id="loopTimeSetterModal"
+  tabindex="-1"
+  aria-labelledby="loopTimeSetterLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Set Time to start</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <label for="mmss">Time (mm:ss):</label>
+        <input
+          type="text"
+          id="start-mmss"
+          pattern="^([0-5]?\d):([0-5]\d)$"
+          placeholder="mm:ss"
+          required
+        />
+
+        <br />
+        <br />
+
+        <label for="end-mmss">Time (mm:ss):</label>
+        <input
+          type="text"
+          id="end-mmss"
+          pattern="^([0-5]?\d):([0-5]\d)$"
+          placeholder="mm:ss"
+          required
+        />
+      </div>
+
+      <div class="modal-footer">
+        <button
+          id="closeSetTimerBtn"
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          disabled
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

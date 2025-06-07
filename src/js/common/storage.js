@@ -46,6 +46,30 @@ export function saveStateInPlatformObject(siteUrlAsKey, dataKey, valueToSet) {
   });
 }
 
+export function saveStateInKeyAsMap(mainKey, key, dataKey, valueToSet) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(mainKey, function (result) {
+      const data = { ...result[mainKey] };
+
+      let siteValueToModify;
+      if (Object.keys(data).length === 0) {
+        siteValueToModify = {};
+      } else {
+        siteValueToModify = result[mainKey][key] ?? {};
+      }
+
+      siteValueToModify[dataKey] = valueToSet ?? null;
+
+      // Update the object back to the original data
+      data[key] = siteValueToModify;
+
+      chrome.storage.local.set({ [mainKey]: data }, function () {
+        resolve(); // Resolve the promise when saving is done
+      });
+    });
+  });
+}
+
 export function savePlatformObject(subKey, valueToSet) {
   const key = DataJsonKey.PLATFORM;
 

@@ -129,7 +129,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.tabs.sendMessage(
           tab.id,
           {
-            action: "togglePause",
+            action: message.action,
             isPaused: true,
           },
           (response) => {}
@@ -143,13 +143,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (tabs.length > 0) {
         const tab = tabs[0]; // Get the first active tab
         chrome.tabs.sendMessage(tab.id, {
-          action: "disturbToggle",
+          action: message.action,
           value: message.value,
         });
       } else {
         console.error("No active tab found!");
       }
     });
+  } else if (message.action === "loopTimeSetter") {
+    chrome.tabs.sendMessage(
+      message.tab.id,
+      {
+        action: message.action,
+        startTime: message.startTime,
+        endTime: message.endTime,
+        tab: message.tab,
+      },
+      (response) => {}
+    );
   }
 });
 

@@ -11,6 +11,8 @@
   });
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    debugger;
+
     if (
       message.action === "DISABLE_SCROLL" &&
       message.site !== "FACEBOOK" &&
@@ -25,7 +27,7 @@
       // }
       return true;
     } else if (message.action === "togglePause") {
-      findMediaElement(); // Ensure we have the latest media element
+      mediaElement = findMediaElement(); // Ensure we have the latest media element
       const isPaused = message.isPaused;
       toggleMediaPlayback(isPaused); // Pause or play the media
     } else if (message.action === "download") {
@@ -95,6 +97,8 @@
       } else {
         clearInterval(interval);
       }
+    } else if (message.action === "loopTimeSetter") {
+      playVideoOnSpecifiedTime(message.startTime, message.endTime);
     }
     sendResponse({
       status: "everything ok",
@@ -107,7 +111,7 @@
   // Find the media element (audio/video) on the page
   function findMediaElement() {
     // Look for the first audio or video element
-    mediaElement = document.querySelector("audio, video");
+    return document.querySelector("audio, video");
   }
 
   // Pause or play the media element
@@ -118,6 +122,29 @@
       } else {
         mediaElement.play(); // Play if not paused
       }
+    }
+  }
+
+  function playVideoOnSpecifiedTime(startTime, endTime) {
+    const video = findMediaElement();
+
+    if (video) {
+      // Remove existing listener if any
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+
+      function handleTimeUpdate() {
+        // Check if video has ended (current time >= duration)
+        if (
+          video.currentTime >=
+          (endTime == 0 ? video.duration : endTime) - 0.1
+        ) {
+          // Small buffer for precision
+          video.currentTime = startTime;
+          // Don't call play() here as it's already playing
+        }
+      }
+
+      video.addEventListener("timeupdate", handleTimeUpdate);
     }
   }
 })();
@@ -139,4 +166,11 @@ function waitForElement(selector, timeout = 30000) {
       reject(new Error("Element not found within timeout."));
     }, timeout);
   });
+}
+
+function mmssToSeconds(timeStr) {
+  const parts = timeStr.split(":");
+  const minutes = parseInt(parts[0], 10);
+  const seconds = parseInt(parts[1], 10);
+  return minutes * 60 + seconds;
 }
