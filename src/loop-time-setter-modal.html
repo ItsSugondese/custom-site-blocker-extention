@@ -17,7 +17,7 @@
         ></button>
       </div>
       <div class="modal-body">
-        <label for="mmss">Time (mm:ss):</label>
+        <label for="start-mmss">Start Time (mm:ss):</label>
         <input
           type="text"
           id="start-mmss"
@@ -29,12 +29,34 @@
         <br />
         <br />
 
-        <label for="end-mmss">Time (mm:ss):</label>
+        <label for="end-mmss">End Time (mm:ss):</label>
         <input
           type="text"
           id="end-mmss"
           pattern="^([0-5]?\d):([0-5]\d)$"
           placeholder="mm:ss"
+          required
+        />
+
+        <br />
+        <br />
+        <label for="skip-start-mmss">Skip Time (mm:ss):</label>
+        <input
+          type="text"
+          id="skip-start-mmss"
+          pattern="^([0-5]?\d):([0-5]\d)$"
+          placeholder="mm:ss"
+          style="width: 100px"
+          required
+        />
+
+        <label for="skip-end-mmss"> - </label>
+        <input
+          type="text"
+          id="skip-end-mmss"
+          pattern="^([0-5]?\d):([0-5]\d)$"
+          placeholder="mm:ss"
+          style="width: 100px"
           required
         />
       </div>

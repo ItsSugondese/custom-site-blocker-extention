@@ -35,15 +35,26 @@ function loadModalHtmlFile() {
             "#end-mmss",
             LoopTimeSetKey.END_TIME
           );
+          setOnFieldByResult(
+            result,
+            tabs,
+            "#skip-start-mmss",
+            LoopTimeSetKey.SKIP_START
+          );
+          setOnFieldByResult(
+            result,
+            tabs,
+            "#skip-end-mmss",
+            LoopTimeSetKey.SKIP_END
+          );
         });
       });
     });
-    $("#start-mmss").on("input", function () {
-      enableDisableField();
-    });
-    $("#end-mmss").on("input", function () {
-      enableDisableField();
-    });
+
+    setOnInputEventForField("#start-mmss");
+    setOnInputEventForField("#end-mmss");
+    setOnInputEventForField("#skip-start-mmss");
+    setOnInputEventForField("#skip-end-mmss");
 
     $("#closeSetTimerBtn").on("click", function () {
       //   saveSingleValueState(DataJsonKey.LOOP_START_TIME, $("#start-mmss").val());
@@ -54,6 +65,8 @@ function loadModalHtmlFile() {
 
           const startVal = $("#start-mmss").val().trim();
           const endVal = $("#end-mmss").val().trim();
+          const skipStartVal = $("#skip-start-mmss").val().trim();
+          const skipEndVal = $("#skip-end-mmss").val().trim();
 
           await saveStateInKeyAsMap(
             DataJsonKey.LOOP_TIME_SET,
@@ -68,12 +81,26 @@ function loadModalHtmlFile() {
             LoopTimeSetKey.END_TIME,
             endVal
           );
+          await saveStateInKeyAsMap(
+            DataJsonKey.LOOP_TIME_SET,
+            currentTab.url,
+            LoopTimeSetKey.SKIP_START,
+            skipStartVal
+          );
+          await saveStateInKeyAsMap(
+            DataJsonKey.LOOP_TIME_SET,
+            currentTab.url,
+            LoopTimeSetKey.SKIP_END,
+            skipEndVal
+          );
 
           // Send to background.js
           chrome.runtime.sendMessage({
             action: "loopTimeSetter",
             startTime: mmssToSeconds(startVal),
             endTime: mmssToSeconds(endVal),
+            skipStartTime: mmssToSeconds(skipStartVal),
+            skipEndTime: mmssToSeconds(skipEndVal),
             tab: currentTab,
           });
         }
@@ -83,19 +110,37 @@ function loadModalHtmlFile() {
     function enableDisableField() {
       const startValue = $("#start-mmss").val().trim();
       const endValue = $("#end-mmss").val().trim();
+      const skipStartValue = $("#skip-start-mmss").val().trim();
+      const skipEndValue = $("#skip-end-mmss").val().trim();
       const regex = /^([0-5]?\d):([0-5]\d)$/;
 
       if (
-        (startValue === "" && endValue === "") || // both empty is invalid
+        (startValue === "" &&
+          endValue === "" &&
+          skipStartValue === "" &&
+          skipEndValue === "") || // all empty is invalid
         (startValue !== "" && !regex.test(startValue)) || // if not empty, must match
-        (endValue !== "" && !regex.test(endValue)) // same here
+        (endValue !== "" && !regex.test(endValue)) ||
+        (skipStartValue !== "" && !regex.test(skipStartValue)) ||
+        (skipEndValue !== "" && !regex.test(skipEndValue)) ||
+        (skipStartValue === "" && skipEndValue !== "") ||
+        (skipStartValue !== "" && skipEndValue === "")
+        // one is filled and the other isn't — invalid
       ) {
         $("#closeSetTimerBtn")
           .prop("disabled", true)
           .removeAttr("data-bs-dismiss");
       } else if (
-        mmssToSeconds(endValue) != 0 &&
-        mmssToSeconds(startValue) >= mmssToSeconds(endValue)
+        (mmssToSeconds(endValue) != 0 &&
+          mmssToSeconds(startValue) >= mmssToSeconds(endValue)) ||
+        (mmssToSeconds(skipStartValue) != 0 &&
+          mmssToSeconds(skipStartValue) >= mmssToSeconds(skipEndValue)) ||
+        (mmssToSeconds(startValue) != 0 &&
+          mmssToSeconds(skipStartValue) != 0 &&
+          mmssToSeconds(skipStartValue) < mmssToSeconds(startValue)) ||
+        (mmssToSeconds(endValue) != 0 &&
+          mmssToSeconds(skipEndValue) != 0 &&
+          mmssToSeconds(skipEndValue) > mmssToSeconds(endValue))
       ) {
         $("#closeSetTimerBtn")
           .prop("disabled", true)
@@ -124,6 +169,12 @@ function loadModalHtmlFile() {
 
       $(element).val(noteData[LoopTimeSetKey[fieldKey]] ?? "");
       enableDisableField();
+    }
+
+    function setOnInputEventForField(element) {
+      $(element).on("input", function () {
+        enableDisableField();
+      });
     }
   });
 }

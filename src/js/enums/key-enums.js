@@ -24,4 +24,6 @@ export const DownloadUrlJsonKey = Object.freeze({
 export const LoopTimeSetKey = Object.freeze({
   START_TIME: "START_TIME",
   END_TIME: "END_TIME",
+  SKIP_START: "SKIP_START",
+  SKIP_END: "SKIP_END",
 });

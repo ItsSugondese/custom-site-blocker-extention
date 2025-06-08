@@ -98,7 +98,12 @@
         clearInterval(interval);
       }
     } else if (message.action === "loopTimeSetter") {
-      playVideoOnSpecifiedTime(message.startTime, message.endTime);
+      playVideoOnSpecifiedTime(
+        message.startTime,
+        message.endTime,
+        message.skipStartTime,
+        message.skipEndTime
+      );
     }
     sendResponse({
       status: "everything ok",
@@ -125,7 +130,12 @@
     }
   }
 
-  function playVideoOnSpecifiedTime(startTime, endTime) {
+  function playVideoOnSpecifiedTime(
+    startTime,
+    endTime,
+    skipStartTime,
+    skipEndTime
+  ) {
     const video = findMediaElement();
 
     if (video) {
@@ -140,6 +150,16 @@
         ) {
           // Small buffer for precision
           video.currentTime = startTime;
+          // Don't call play() here as it's already playing
+        }
+
+        if (
+          skipEndTime != 0 &&
+          video.currentTime < skipEndTime &&
+          video.currentTime >= skipStartTime
+        ) {
+          // Small buffer for precision
+          video.currentTime = skipEndTime;
           // Don't call play() here as it's already playing
         }
       }

@@ -151,16 +151,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     });
   } else if (message.action === "loopTimeSetter") {
-    chrome.tabs.sendMessage(
-      message.tab.id,
-      {
-        action: message.action,
-        startTime: message.startTime,
-        endTime: message.endTime,
-        tab: message.tab,
-      },
-      (response) => {}
-    );
+    chrome.tabs.sendMessage(message.tab.id, message, (response) => {});
   }
 });
 
