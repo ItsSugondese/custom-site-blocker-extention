@@ -176,10 +176,18 @@ function siteActionPerformCondition(site, tab, data) {
   shouldDisableScroll = data[DataJsonKey.SHOULD_DISABLE_SCROLL] ?? false;
 
   chrome.storage.local.get(DataJsonKey.PLATFORM, function (result) {
-    const includeUrl =
-      result[DataJsonKey.PLATFORM][site][FilterJsonKey.INCLUDE] ?? [];
-    const containsUrl =
+    let containsUrl =
       result[DataJsonKey.PLATFORM][site][FilterJsonKey.CONTAINS] ?? [];
+
+    // to only close site for specific url without removing others
+    const mainIncludeUrl =
+      result[DataJsonKey.PLATFORM][site][FilterJsonKey.INCLUDE] ?? [];
+
+    const endsWithJs = mainIncludeUrl
+      .filter((str) => str.endsWith("this"))
+      .map((str) => str.split(/\s+/)[0]);
+
+    const includeUrl = endsWithJs.length > 0 ? endsWithJs : mainIncludeUrl;
 
     if (
       containsUrl.some((prefix) => currentTabUrl.startsWith(prefix)) ||
@@ -236,7 +244,7 @@ function closeAllTabsExceptAudio(site) {
         chrome.scripting.executeScript(
           {
             target: { tabId: tab.id },
-            func: site === undefined ? checkAudioPlaying : null,
+            func: checkAudioPlaying,
           },
           (result) => {
             if (!(result && result[0].result)) {

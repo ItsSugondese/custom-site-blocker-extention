@@ -11,8 +11,6 @@
   });
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    debugger;
-
     if (
       message.action === "DISABLE_SCROLL" &&
       message.site !== "FACEBOOK" &&
