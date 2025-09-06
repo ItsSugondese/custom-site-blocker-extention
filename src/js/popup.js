@@ -40,6 +40,20 @@ $(function () {
       }
     );
   });
+
+  $("#removeTabNameField").on("input", function () {
+    enableDisableRemoveSiteBtn();
+  });
+
+  $("#removeTabNameBtn").on("click", function () {
+    var val = $("#removeTabNameField").val();
+    chrome.runtime.sendMessage({
+      action: "closeAllTab",
+      value: val,
+    });
+
+    $("#removeTabNameField").val("");
+  });
 });
 
 document.body.addEventListener("change", function (e) {
@@ -70,3 +84,13 @@ document.body.addEventListener("change", function (e) {
 window.addEventListener("beforeunload", () => {
   chrome.runtime.connect({ name: "popup" }).postMessage("popupClosed");
 });
+
+function enableDisableRemoveSiteBtn() {
+  var val = $("#removeTabNameField").val(); // <-- call it as a function
+
+  if (val.length < 1) {
+    $("#removeTabNameBtn").prop("disabled", true);
+  } else {
+    $("#removeTabNameBtn").prop("disabled", false);
+  }
+}

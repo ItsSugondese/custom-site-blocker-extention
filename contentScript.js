@@ -148,6 +148,7 @@
         ) {
           // Small buffer for precision
           video.currentTime = startTime;
+          video.play();
           // Don't call play() here as it's already playing
         }
 
@@ -158,6 +159,7 @@
         ) {
           // Small buffer for precision
           video.currentTime = skipEndTime;
+          video.play();
           // Don't call play() here as it's already playing
         }
       }
